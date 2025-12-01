@@ -37,7 +37,7 @@ echo "下载地址：$source_url"
 echo "文件哈希值：$pkg_sha256"
 if [[ -n "$version" ]] && [[ -n "$source_url" ]]; then
     wget --connect-timeout=1800 --read-timeout=1800 "$source_url/linkease-binary-$version.tar.gz" -O "linkease-binary-$version.tar.gz"
-    # 校验下载的文件的哈希值
+    # 校验下载的文件哈希值
     downloaded_sha256=$(sha256sum "linkease-binary-$version.tar.gz" | awk '{print $1}')
     if [[ "$downloaded_sha256" != "$pkg_sha256" ]]; then
         echo "文件哈希值不匹配，正在删除下载的文件..."
