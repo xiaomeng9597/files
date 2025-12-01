@@ -6,25 +6,28 @@ sudo chown "$USER:$GROUPS" /mnt/xiaomeng9597/files
 cd /mnt/xiaomeng9597/files
 
 # 获取Makefile内容
-mfile=$(wget -qO- "https://raw.githubusercontent.com/linkease/nas-packages/master/network/services/linkease/Makefile")
+mfileval=$(wget -qO- "https://raw.githubusercontent.com/linkease/nas-packages/master/network/services/linkease/Makefile")
 
 # 提取版本、源URL和哈希值
-version=$(echo "$mfile" | sed -n 's/.*PKG_VERSION:=\([0-9.]*\).*/\1/p')
+version=$(echo "$mfileval" | sed -n 's/.*PKG_SOURCE_DATE:=\([^[:space:]]*\).*/\1/p')
 if [ -z "$version" ]; then
-    version=$(echo "$mfile" | grep -oP 'PKG_VERSION:=\s*\K[0-9.]+')
+    version=$(echo "$mfileval" | grep -oP 'PKG_SOURCE_DATE:=\s*\K[^[:space:]]+')
 fi
 
-source_url=$(echo "$mfile" | sed -n 's/.*PKG_SOURCE_URL:=\([^[:space:]]*\).*/\1/p')
+source_url=$(echo "$mfileval" | sed -n 's/.*PKG_SOURCE_URL:=\([^[:space:]]*\).*/\1/p')
 if [ -z "$source_url" ]; then
-    source_url=$(echo "$mfile" | grep -oP 'PKG_SOURCE_URL:=\s*\K[^[:space:]]+')
+    source_url=$(echo "$mfileval" | grep -oP 'PKG_SOURCE_URL:=\s*\K[^[:space:]]+')
 fi
 
-pkg_sha256=$(echo "$mfile" | sed -n 's/.*PKG_HASH:=\([^[:space:]]*\).*/\1/p')
+pkg_sha256=$(echo "$mfileval" | sed -n 's/.*PKG_HASH:=\([^[:space:]]*\).*/\1/p')
 if [ -z "$pkg_sha256" ]; then
-    pkg_sha256=$(echo "$mfile" | grep -oP 'PKG_HASH:=\s*\K[^[:space:]]+')
+    pkg_sha256=$(echo "$mfileval" | grep -oP 'PKG_HASH:=\s*\K[^[:space:]]+')
 fi
 
 # 下载文件
+echo "版本号：$version"
+echo "下载地址：$source_url"
+echo "文件哈希值：$pkg_sha256"
 if [ -n "$version" ] && [ -n "$source_url" ]; then
     wget --connect-timeout=1800 --read-timeout=1800 "$source_url/linkease-binary-$version.tar.gz" -O "linkease-binary-$version.tar.gz"
     # 校验下载的文件的哈希值
