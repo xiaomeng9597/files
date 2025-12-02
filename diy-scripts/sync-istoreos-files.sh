@@ -3,7 +3,7 @@
 # 工作目录
 sudo mkdir -p /mnt/xiaomeng9597/files
 sudo chown "$USER:$GROUPS" /mnt/xiaomeng9597/files
-cd /mnt/xiaomeng9597/files
+cd /mnt/xiaomeng9597/files || exit
 
 # 获取Makefile内容
 mfileval=$(wget -qO- "https://raw.githubusercontent.com/linkease/nas-packages/master/network/services/linkease/Makefile")
