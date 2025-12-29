@@ -2,16 +2,16 @@
 # fan_auto_speed.sh - 细腻线性调速版，根据CPU温度平滑调整风扇
 
 TEMP_PATH="/sys/class/thermal/thermal_zone0/temp"
- if [ -f "/sys/class/hwmon/hwmon10/pwm1" ]; then
-     PWM_PATH="/sys/class/hwmon/hwmon10/pwm1"
-     PWM_ENABLE="/sys/class/hwmon/hwmon10/pwm1_enable"
- elif [ -f "/sys/class/hwmon/hwmon8/pwm1" ]; then
-     PWM_PATH="/sys/class/hwmon/hwmon8/pwm1"
-     PWM_ENABLE="/sys/class/hwmon/hwmon8/pwm1_enable"
- else
-     echo "占空比文件不存在"
-     exit 1
- fi
+if [ -f "/sys/class/hwmon/hwmon10/pwm1" ]; then
+    PWM_PATH="/sys/class/hwmon/hwmon10/pwm1"
+    PWM_ENABLE="/sys/class/hwmon/hwmon10/pwm1_enable"
+elif [ -f "/sys/class/hwmon/hwmon8/pwm1" ]; then
+    PWM_PATH="/sys/class/hwmon/hwmon8/pwm1"
+    PWM_ENABLE="/sys/class/hwmon/hwmon8/pwm1_enable"
+else
+    echo "占空比文件不存在"
+    exit 1
+fi
 
 # 核心配置：自定义温度阈值和对应PWM值（可按需增删细化）
 MIN_TEMP=50       # 风扇启动温度
@@ -32,6 +32,12 @@ if [ ! -w $PWM_ENABLE ]; then
     echo "错误：无权限操作 $PWM_ENABLE，请使用 sudo 运行"
     exit 1
 fi
+
+if ! bc --version >/dev/null 2>&1; then
+    echo "错误：未找到 bc 工具，脚本退出"
+    exit 1
+fi
+
 echo 1 > $PWM_ENABLE
 
 # PWM值与等级映射
