@@ -9,7 +9,7 @@ elif [ -f "/sys/class/hwmon/hwmon8/pwm1" ]; then
     PWM_PATH="/sys/class/hwmon/hwmon8/pwm1"
     PWM_ENABLE="/sys/class/hwmon/hwmon8/pwm1_enable"
 else
-    echo "占空比文件不存在"
+    echo "错误：占空比文件不存在"
     exit 1
 fi
 
@@ -34,7 +34,7 @@ if [ ! -w $PWM_ENABLE ]; then
 fi
 
 if ! bc --version >/dev/null 2>&1; then
-    echo "错误：未找到 bc 工具，脚本退出"
+    echo "错误：未找到 bc 工具"
     exit 1
 fi
 
