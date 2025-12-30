@@ -13,6 +13,17 @@ else
     exit 1
 fi
 
+# 检查权限
+if [ ! -w $PWM_ENABLE ]; then
+    echo "错误：无权限操作 $PWM_ENABLE，请使用 sudo 运行"
+    exit 1
+fi
+
+if ! bc --version >/dev/null 2>&1; then
+    echo "错误：未找到 bc 工具"
+    exit 1
+fi
+
 # 核心配置：自定义温度阈值和对应PWM值（可按需增删细化）
 MIN_TEMP=50       # 风扇启动温度
 LOW_TEMP=55       # 低转速阈值
@@ -27,17 +38,7 @@ MID_HIGH_PWM=191  # 中高速
 HIGH_PWM=204      # 高速
 MAX_PWM=255       # 满速
 
-# 切换为手动模式并检查权限
-if [ ! -w $PWM_ENABLE ]; then
-    echo "错误：无权限操作 $PWM_ENABLE，请使用 sudo 运行"
-    exit 1
-fi
-
-if ! bc --version >/dev/null 2>&1; then
-    echo "错误：未找到 bc 工具"
-    exit 1
-fi
-
+# 切换为手动模式
 echo 1 > $PWM_ENABLE
 
 # PWM值与等级映射
