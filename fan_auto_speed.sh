@@ -19,6 +19,7 @@ if [ ! -w $PWM_ENABLE ]; then
     exit 1
 fi
 
+# 检查 bc 依赖
 if ! bc --version >/dev/null 2>&1; then
     echo "错误：未找到 bc 工具"
     exit 1
@@ -45,7 +46,7 @@ echo 1 > $PWM_ENABLE
 declare -A PWM_TO_LEVEL=( [0]=0 [120]=1 [179]=2 [191]=3 [204]=4 [255]=5 )
 
 while true; do
-    # 读取温度（m℃转℃，保留1位小数更精准）
+    # 读取温度（m℃转℃，保留1位小数）
     RAW_TEMP=$(cat $TEMP_PATH)
     TEMP=$(echo "scale=1; $RAW_TEMP / 1000" | bc -l)
 
